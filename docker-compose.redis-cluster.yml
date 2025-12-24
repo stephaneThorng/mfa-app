@@ -1,0 +1,79 @@
+services:
+  redis-1:
+    image: redis:7.2-alpine
+    container_name: redis-1
+    command: >
+      redis-server
+      --port 6379
+      --cluster-enabled yes
+      --cluster-config-file nodes.conf
+      --cluster-node-timeout 5000
+      --appendonly yes
+    ports:
+      - "7000:6379"
+    networks:
+      - redis-net
+
+  redis-2:
+    image: redis:7.2-alpine
+    container_name: redis-2
+    command: >
+      redis-server
+      --port 6379
+      --cluster-enabled yes
+      --cluster-config-file nodes.conf
+      --cluster-node-timeout 5000
+      --appendonly yes
+    ports:
+      - "7001:6379"
+    networks:
+      - redis-net
+
+  redis-3:
+    image: redis:7.2-alpine
+    container_name: redis-3
+    command: >
+      redis-server
+      --port 6379
+      --cluster-enabled yes
+      --cluster-config-file nodes.conf
+      --cluster-node-timeout 5000
+      --appendonly yes
+    ports:
+      - "7002:6379"
+    networks:
+      - redis-net
+
+  redis-cluster-init:
+    image: redis:7.2-alpine
+    container_name: redis-cluster-init
+    depends_on:
+      - redis-1
+      - redis-2
+      - redis-3
+    networks:
+      - redis-net
+    entrypoint: >
+      sh -c "
+        echo 'Waiting for Redis nodes...';
+        until redis-cli -h redis-1 -p 6379 ping; do
+          echo waiting for redis-1...
+          sleep 1
+        done;
+        until redis-cli -h redis-2 -p 6379 ping; do
+          echo waiting for redis-2...
+          sleep 1
+        done;
+        until redis-cli -h redis-3 -p 6379 ping; do
+          echo waiting for redis-3...
+          sleep 1
+        done;
+        echo 'All nodes ready, creating cluster...';
+        yes yes | redis-cli --cluster create redis-1:6379 redis-2:6379 redis-3:6379 --cluster-replicas 0;
+        echo 'Cluster created successfully.';
+        sleep 2
+      "
+
+networks:
+  redis-net:
+    driver: bridge

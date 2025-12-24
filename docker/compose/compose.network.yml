@@ -1,0 +1,5 @@
+# docker/networks.yml
+networks:
+  mfa-app:
+    name: mfa-app
+    driver: bridge

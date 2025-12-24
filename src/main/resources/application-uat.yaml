@@ -1,0 +1,21 @@
+spring:
+  data:
+    redis:
+      cluster:
+        nodes: redis-1:6379,redis-2:6379,redis-3:6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+management:
+  health:
+    redis:
+      enabled: false
+logging:
+  level:
+    org.springframework.data.redis.connection: DEBUG   # logs de connexion Redis
+    org.springframework.data.redis.core: DEBUG         # logs des opérations Redis
+    io.lettuce.core: TRACE                             # logs Lettuce détaillés (connexion, commandes)
+    org.springframework.data.redis: DEBUG              # logs généraux Spring Data Redis
