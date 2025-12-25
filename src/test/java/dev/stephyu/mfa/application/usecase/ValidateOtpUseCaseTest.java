@@ -12,9 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ValidateOtpUseCaseTest {
+class ValidateOtpUseCaseTest {
 
     private static final Instant FIXED_NOW = Instant.parse("2025-01-01T10:00:00Z");
 
@@ -44,7 +48,7 @@ public class ValidateOtpUseCaseTest {
     }
 
     @Test
-    public void validate_returnsTrue_andDeletes_onCorrectCode() {
+    void validate_returnsTrue_andDeletes_onCorrectCode() {
         InMemoryStore store = new InMemoryStore();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
         ValidateOtpUseCase uc = new ValidateOtpUseCase(store, clock);
@@ -59,7 +63,7 @@ public class ValidateOtpUseCaseTest {
     }
 
     @Test
-    public void validate_decrementsAttempts_andSaves_whenWrongButNotExhausted() {
+    void validate_decrementsAttempts_andSaves_whenWrongButNotExhausted() {
         InMemoryStore store = new InMemoryStore();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
         ValidateOtpUseCase uc = new ValidateOtpUseCase(store, clock);
@@ -79,7 +83,7 @@ public class ValidateOtpUseCaseTest {
     }
 
     @Test
-    public void validate_deletes_whenAttemptsExhausted_afterWrong() {
+    void validate_deletes_whenAttemptsExhausted_afterWrong() {
         InMemoryStore store = new InMemoryStore();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
         ValidateOtpUseCase uc = new ValidateOtpUseCase(store, clock);
@@ -96,7 +100,7 @@ public class ValidateOtpUseCaseTest {
     }
 
     @Test
-    public void validate_returnsFalse_andDeletes_whenExpired() {
+    void validate_returnsFalse_andDeletes_whenExpired() {
         InMemoryStore store = new InMemoryStore();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
         ValidateOtpUseCase uc = new ValidateOtpUseCase(store, clock);
@@ -112,7 +116,7 @@ public class ValidateOtpUseCaseTest {
     }
 
     @Test
-    public void validate_returnsFalse_whenOtpMissing() {
+    void validate_returnsFalse_whenOtpMissing() {
         InMemoryStore store = new InMemoryStore();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
         ValidateOtpUseCase uc = new ValidateOtpUseCase(store, clock);

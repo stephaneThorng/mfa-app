@@ -12,7 +12,7 @@ services:
     ports:
       - "7000:6379"
     networks:
-      - redis-net
+      - mfa-app
 
   redis-2:
     image: redis:7.2-alpine
@@ -27,7 +27,7 @@ services:
     ports:
       - "7001:6379"
     networks:
-      - redis-net
+      - mfa-app
 
   redis-3:
     image: redis:7.2-alpine
@@ -42,7 +42,7 @@ services:
     ports:
       - "7002:6379"
     networks:
-      - redis-net
+      - mfa-app
 
   redis-cluster-init:
     image: redis:7.2-alpine
@@ -52,7 +52,7 @@ services:
       - redis-2
       - redis-3
     networks:
-      - redis-net
+      - mfa-app
     entrypoint: >
       sh -c "
         echo 'Waiting for Redis nodes...';
@@ -73,7 +73,3 @@ services:
         echo 'Cluster created successfully.';
         sleep 2
       "
-
-networks:
-  redis-net:
-    driver: bridge

@@ -4,12 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class OtpTest {
+class OtpTest {
 
     @Test
-    public void validate_returnsTrue_whenCodeMatches_andNotExpired() {
+    void validate_returnsTrue_whenCodeMatches_andNotExpired() {
         Instant now = Instant.parse("2025-01-01T10:00:00Z");
         Instant expires = now.plusSeconds(60);
         Otp otp = new Otp("user", "1234", expires, 3);
@@ -19,7 +21,7 @@ public class OtpTest {
     }
 
     @Test
-    public void validate_decrementsAttempts_andReturnsFalse_onWrongCode_whenNotExpired() {
+    void validate_decrementsAttempts_andReturnsFalse_onWrongCode_whenNotExpired() {
         Instant now = Instant.parse("2025-01-01T10:00:00Z");
         Instant expires = now.plusSeconds(60);
         Otp otp = new Otp("user", "1234", expires, 3);
@@ -35,7 +37,7 @@ public class OtpTest {
     }
 
     @Test
-    public void validate_returnsFalse_andDoesNotDecrement_whenExpired() {
+    void validate_returnsFalse_andDoesNotDecrement_whenExpired() {
         Instant now = Instant.parse("2025-01-01T10:00:00Z");
         Instant expires = now.minusSeconds(1); // already expired
         Otp otp = new Otp("user", "1234", expires, 3);
@@ -45,7 +47,7 @@ public class OtpTest {
     }
 
     @Test
-    public void isExpired_behaviour_atAndAfterBoundary() {
+    void isExpired_behaviour_atAndAfterBoundary() {
         Instant expires = Instant.parse("2025-01-01T10:00:00Z");
         Otp otp = new Otp("user", "1234", expires, 1);
 
@@ -54,7 +56,7 @@ public class OtpTest {
     }
 
     @Test
-    public void accessors_returnValues() {
+    void accessors_returnValues() {
         Instant now = Instant.parse("2025-01-01T10:00:00Z");
         Otp otp = new Otp("uid", "code", now.plusSeconds(10), 5);
 

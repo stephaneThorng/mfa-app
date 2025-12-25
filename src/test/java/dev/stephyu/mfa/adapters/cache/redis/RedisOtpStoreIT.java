@@ -41,14 +41,6 @@ class RedisOtpStoreIT {
     @Autowired
     OtpStore otpStore;
 
-//    @Autowired
-//    RedisTestHelper otpStoreTestHelper;
-
-//    @BeforeEach
-//    void cleanRedis() {
-//        otpStoreTestHelper.clearAllOtp();
-//    }
-
     @Test
     void should_store_and_read_otp() {
         Otp otp = new Otp(

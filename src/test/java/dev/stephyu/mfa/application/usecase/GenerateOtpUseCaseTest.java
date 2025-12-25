@@ -12,8 +12,12 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
-public class GenerateOtpUseCaseTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+class GenerateOtpUseCaseTest {
     private static final Instant FIXED_NOW = Instant.parse("2025-01-01T10:00:00Z");
 
     static class TestStore implements OtpStore {
@@ -48,7 +52,7 @@ public class GenerateOtpUseCaseTest {
     }
 
     @Test
-    public void generate_createsOtp_savesAndPublishes_andUsesTtlAndAttempts() throws Exception {
+    void generate_createsOtp_savesAndPublishes_andUsesTtlAndAttempts() throws Exception {
         TestStore store = new TestStore();
         TestPublisher publisher = new TestPublisher();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);

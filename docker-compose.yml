@@ -93,7 +93,7 @@ services:
       - redis-2
       - redis-3
     environment:
-      - SPRING_PROFILES_ACTIVE=redis-cluster
+      - SPRING_PROFILES_ACTIVE=uat
     ports:
       - "8080:8080"
     networks:

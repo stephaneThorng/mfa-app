@@ -20,6 +20,7 @@ public class InMemoryOtpStore implements OtpStore {
     public void save(Otp otp, long ttlSeconds) {
         Instant expires = Instant.now().plusSeconds(ttlSeconds);
         map.put(otp.userId(), new Stored(otp, expires));
+        System.out.println("IN_MEMORY : Save for " + otp.userId() + ":" + otp);
     }
 
     @Override

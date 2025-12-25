@@ -1,5 +1,12 @@
 spring:
-  application:
+  profiles:
+    group:
+      local:
+        - inmemory
+      int:
+        - redis
+      uat:
+        - redis
     name: 2fa
 springdoc:
   api-docs:

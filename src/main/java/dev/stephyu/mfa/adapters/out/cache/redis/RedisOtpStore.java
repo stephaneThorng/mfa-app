@@ -14,24 +14,14 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Profile({"redis", "redis-standalone", "redis-cluster"})
+@Profile({"redis"})
 @Component
 public class RedisOtpStore implements OtpStore {
     private final RedisTemplate<String, RedisOtpEntity> redisTemplate;
 
-    @Autowired
-    private Environment environment;
-
     public RedisOtpStore(RedisTemplate<String, RedisOtpEntity> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
-
-    @PostConstruct
-    public void init() {
-        System.out.println(">>> Active profiles: " + Arrays.toString(environment.getActiveProfiles()));
-        System.out.println(">>> RedisOtpStore connected to " + redisTemplate.getConnectionFactory());
-    }
-
 
     @Override
     public void save(Otp otp, long ttlSeconds) {
@@ -43,6 +33,7 @@ public class RedisOtpStore implements OtpStore {
         } else {
             redisTemplate.opsForValue().set(key, entity, Duration.ofSeconds(ttlSeconds));
         }
+        System.out.println("REDIS : Save for " + key + ":" + entity);
     }
 
     @Override
