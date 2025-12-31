@@ -1,25 +1,21 @@
 package dev.stephyu.mfa.adapters.out.cache.redis;
 
 import dev.stephyu.mfa.domain.Otp;
-import dev.stephyu.mfa.ports.out.OtpStore;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import dev.stephyu.mfa.ports.out.OtpStorePort;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 @Profile({"redis"})
 @Component
-public class RedisOtpStore implements OtpStore {
+public class RedisOtpStoreAdapter implements OtpStorePort {
     private final RedisTemplate<String, RedisOtpEntity> redisTemplate;
 
-    public RedisOtpStore(RedisTemplate<String, RedisOtpEntity> redisTemplate) {
+    public RedisOtpStoreAdapter(RedisTemplate<String, RedisOtpEntity> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

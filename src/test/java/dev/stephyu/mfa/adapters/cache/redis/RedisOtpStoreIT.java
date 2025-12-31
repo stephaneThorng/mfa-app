@@ -2,17 +2,13 @@ package dev.stephyu.mfa.adapters.cache.redis;
 
 import com.redis.testcontainers.RedisContainer;
 import dev.stephyu.mfa.domain.Otp;
-import dev.stephyu.mfa.ports.out.OtpStore;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import dev.stephyu.mfa.ports.out.OtpStorePort;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -33,13 +29,13 @@ class RedisOtpStoreIT {
                     .withExposedPorts(6379);
 
     @DynamicPropertySource
-    static void redisProps(DynamicPropertyRegistry registry) {
+    static void props(DynamicPropertyRegistry registry) {
         registry.add("spring.data.redis.host", REDIS_CONTAINER::getHost);
         registry.add("spring.data.redis.port", () -> REDIS_CONTAINER.getMappedPort(6379));
     }
 
     @Autowired
-    OtpStore otpStore;
+    OtpStorePort otpStorePort;
 
     @Test
     void should_store_and_read_otp() {
@@ -50,9 +46,9 @@ class RedisOtpStoreIT {
                 3
         );
 
-        otpStore.save(otp, 300);
+        otpStorePort.save(otp, 300);
 
-        Optional<Otp> loaded = otpStore.findByUserId("user1");
+        Optional<Otp> loaded = otpStorePort.findByUserId("user1");
 
         assertThat(loaded).isPresent();
         assertThat(loaded.get().code()).isEqualTo("123456");
@@ -67,10 +63,10 @@ class RedisOtpStoreIT {
                 3
         );
 
-        otpStore.save(otp, 2);
+        otpStorePort.save(otp, 2);
 
         Thread.sleep(3000);
 
-        assertThat(otpStore.findByUserId("user2")).isEmpty();
+        assertThat(otpStorePort.findByUserId("user2")).isEmpty();
     }
 }

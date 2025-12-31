@@ -2,9 +2,13 @@ package dev.stephyu.mfa.application.usecase;
 
 import dev.stephyu.mfa.application.dto.GenerateOtpRequest;
 import dev.stephyu.mfa.domain.Otp;
-import dev.stephyu.mfa.ports.out.OtpEventPublisher;
-import dev.stephyu.mfa.ports.out.OtpStore;
+import dev.stephyu.mfa.ports.out.OtpEventPublisherPort;
+import dev.stephyu.mfa.ports.out.OtpStorePort;
+import dev.stephyu.mfa.ports.out.UserRepositoryPort;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Field;
 import java.time.Clock;
@@ -16,11 +20,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class GenerateOtpUseCaseTest {
     private static final Instant FIXED_NOW = Instant.parse("2025-01-01T10:00:00Z");
 
-    static class TestStore implements OtpStore {
+    @Mock
+    private UserRepositoryPort userRepositoryPort;
+
+    static class TestStorePort implements OtpStorePort {
         Otp lastSaved;
         long lastTtl;
         String deletedUser;
@@ -42,7 +51,7 @@ class GenerateOtpUseCaseTest {
         }
     }
 
-    static class TestPublisher implements OtpEventPublisher {
+    static class TestPublisherPort implements OtpEventPublisherPort {
         Otp lastPublished;
 
         @Override
@@ -53,11 +62,12 @@ class GenerateOtpUseCaseTest {
 
     @Test
     void generate_createsOtp_savesAndPublishes_andUsesTtlAndAttempts() throws Exception {
-        TestStore store = new TestStore();
-        TestPublisher publisher = new TestPublisher();
+        TestStorePort store = new TestStorePort();
+        TestPublisherPort publisher = new TestPublisherPort();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
 
-        GenerateOtpUseCase uc = new GenerateOtpUseCase(store, publisher, clock, 60, 3);
+        when(userRepositoryPort.findById("user-1")).thenReturn( java.util.Optional.of(new dev.stephyu.mfa.domain.User("user-1", true)) );
+        GenerateOtpUseCase uc = new GenerateOtpUseCase(userRepositoryPort, store, publisher, clock, 60, 3);
 
         // make generated code deterministic by seeding the private Random
         Random seed = new Random(0);

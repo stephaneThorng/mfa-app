@@ -1,7 +1,7 @@
 package dev.stephyu.mfa.adapters.out.cache.inmemory;
 
 import dev.stephyu.mfa.domain.Otp;
-import dev.stephyu.mfa.ports.out.OtpStore;
+import dev.stephyu.mfa.ports.out.OtpStorePort;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Profile("inmemory")
 @Component
-public class InMemoryOtpStore implements OtpStore {
+public class InMemoryOtpStoreAdapter implements OtpStorePort {
 
     private final Map<String, Stored> map = new ConcurrentHashMap<>();
 

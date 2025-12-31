@@ -8,6 +8,13 @@ spring:
       uat:
         - redis
     name: 2fa
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mfa
+    username: mfa
+    password: mfa
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
 springdoc:
   api-docs:
     enabled: true

@@ -2,7 +2,7 @@ package dev.stephyu.mfa.application.usecase;
 
 import dev.stephyu.mfa.application.dto.ValidateOtpRequest;
 import dev.stephyu.mfa.domain.Otp;
-import dev.stephyu.mfa.ports.out.OtpStore;
+import dev.stephyu.mfa.ports.out.OtpStorePort;
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
@@ -22,7 +22,7 @@ class ValidateOtpUseCaseTest {
 
     private static final Instant FIXED_NOW = Instant.parse("2025-01-01T10:00:00Z");
 
-    static class InMemoryStore implements OtpStore {
+    static class InMemoryStorePort implements OtpStorePort {
         final Map<String, Otp> map = new HashMap<>();
         Otp lastSaved;
         long lastTtl;
@@ -49,7 +49,7 @@ class ValidateOtpUseCaseTest {
 
     @Test
     void validate_returnsTrue_andDeletes_onCorrectCode() {
-        InMemoryStore store = new InMemoryStore();
+        InMemoryStorePort store = new InMemoryStorePort();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
         ValidateOtpUseCase uc = new ValidateOtpUseCase(store, clock);
 
@@ -64,7 +64,7 @@ class ValidateOtpUseCaseTest {
 
     @Test
     void validate_decrementsAttempts_andSaves_whenWrongButNotExhausted() {
-        InMemoryStore store = new InMemoryStore();
+        InMemoryStorePort store = new InMemoryStorePort();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
         ValidateOtpUseCase uc = new ValidateOtpUseCase(store, clock);
 
@@ -84,7 +84,7 @@ class ValidateOtpUseCaseTest {
 
     @Test
     void validate_deletes_whenAttemptsExhausted_afterWrong() {
-        InMemoryStore store = new InMemoryStore();
+        InMemoryStorePort store = new InMemoryStorePort();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
         ValidateOtpUseCase uc = new ValidateOtpUseCase(store, clock);
 
@@ -101,7 +101,7 @@ class ValidateOtpUseCaseTest {
 
     @Test
     void validate_returnsFalse_andDeletes_whenExpired() {
-        InMemoryStore store = new InMemoryStore();
+        InMemoryStorePort store = new InMemoryStorePort();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
         ValidateOtpUseCase uc = new ValidateOtpUseCase(store, clock);
 
@@ -117,7 +117,7 @@ class ValidateOtpUseCaseTest {
 
     @Test
     void validate_returnsFalse_whenOtpMissing() {
-        InMemoryStore store = new InMemoryStore();
+        InMemoryStorePort store = new InMemoryStorePort();
         Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
         ValidateOtpUseCase uc = new ValidateOtpUseCase(store, clock);
 

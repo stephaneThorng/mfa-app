@@ -1,9 +1,9 @@
 package dev.stephyu.mfa.adapters.out;
 
 import dev.stephyu.mfa.domain.Otp;
-import dev.stephyu.mfa.ports.out.OtpEventPublisher;
+import dev.stephyu.mfa.ports.out.OtpEventPublisherPort;
 
-public class LoggingOtpEventPublisher implements OtpEventPublisher {
+public class LoggingOtpEventPublisherAdapter implements OtpEventPublisherPort {
 
     @Override
     public void publishOtpGenerated(Otp otp) {
