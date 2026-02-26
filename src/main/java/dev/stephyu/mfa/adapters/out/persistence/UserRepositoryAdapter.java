@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class UserRepositoryPortAdapter implements UserRepositoryPort {
+public class UserRepositoryAdapter implements UserRepositoryPort {
 
     @Autowired
     UserEntityRepository repository;
